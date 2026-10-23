@@ -1,0 +1,45 @@
+# Maintainer: Kestrel <https://github.com/kestrel-distro>
+#
+# scx-tools with the Kestrel scx_kestrel scheduler registered. The only fork
+# change is SupportedSched::Kestrel plus its layer-file argument; it replaces
+# the distro scx-tools package so `kestrel scx switch scx_kestrel` works.
+
+pkgname=scx-tools-kestrel
+pkgver=1.1.3
+pkgrel=1
+pkgdesc="scx_loader/scxctl with the Kestrel scx_kestrel scheduler"
+arch=(x86_64)
+url="https://github.com/kestrel-distro/scx-loader"
+license=(GPL-2.0-only)
+depends=(gcc-libs polkit)
+makedepends=(rust cargo)
+provides=(scx-tools)
+conflicts=(scx-tools)
+replaces=(scx-tools)
+source=()
+sha256sums=()
+
+build() {
+    cd "${startdir}/.."
+    cargo build --release --locked -p scx_loader -p scxctl
+}
+
+package() {
+    cd "${startdir}/.."
+
+    install -Dm755 target/release/scx_loader "$pkgdir/usr/bin/scx_loader"
+    install -Dm755 target/release/scxctl "$pkgdir/usr/bin/scxctl"
+
+    install -Dm644 configs/org.scx.Loader.conf \
+        "$pkgdir/usr/share/dbus-1/system.d/org.scx.Loader.conf"
+    install -Dm644 configs/org.scx.Loader.xml \
+        "$pkgdir/usr/share/dbus-1/interfaces/org.scx.Loader.xml"
+    install -Dm644 configs/org.scx.Loader.policy \
+        "$pkgdir/usr/share/polkit-1/actions/org.scx.Loader.policy"
+    install -Dm644 configs/scx_loader.toml \
+        "$pkgdir/usr/share/scx_loader/config.toml"
+    install -Dm644 services/org.scx.Loader.service \
+        "$pkgdir/usr/share/dbus-1/system-services/org.scx.Loader.service"
+    install -Dm644 services/scx_loader.service \
+        "$pkgdir/usr/lib/systemd/system/scx_loader.service"
+}

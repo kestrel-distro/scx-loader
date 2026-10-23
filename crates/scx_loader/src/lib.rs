@@ -50,6 +50,11 @@ pub enum SupportedSched {
     MLFQ,
     #[serde(rename = "scx_eevdf")]
     EEVDF,
+    /// Kestrel's hint-driven fork of scx_layered. It takes its layer
+    /// configuration as an argument, so the config module gives every mode
+    /// the shipped layers file.
+    #[serde(rename = "scx_kestrel")]
+    Kestrel,
 }
 
 impl FromStr for SupportedSched {
@@ -63,6 +68,7 @@ impl FromStr for SupportedSched {
             "scx_cosmos" => Ok(SupportedSched::Cosmos),
             "scx_eevdf" => Ok(SupportedSched::EEVDF),
             "scx_flash" => Ok(SupportedSched::Flash),
+            "scx_kestrel" => Ok(SupportedSched::Kestrel),
             "scx_flow" => Ok(SupportedSched::Flow),
             "scx_forge" => Ok(SupportedSched::Forge),
             "scx_lavd" => Ok(SupportedSched::Lavd),
@@ -93,6 +99,7 @@ impl From<SupportedSched> for &str {
             SupportedSched::Cosmos => "scx_cosmos",
             SupportedSched::EEVDF => "scx_eevdf",
             SupportedSched::Flash => "scx_flash",
+            SupportedSched::Kestrel => "scx_kestrel",
             SupportedSched::Flow => "scx_flow",
             SupportedSched::Forge => "scx_forge",
             SupportedSched::Lavd => "scx_lavd",
@@ -151,5 +158,18 @@ impl From<SchedMode> for &str {
             SchedMode::LowLatency => "lowlatency",
             SchedMode::Server => "server",
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::SupportedSched;
+
+    #[test]
+    fn kestrel_round_trips_through_every_representation() {
+        let parsed = "scx_kestrel".parse::<SupportedSched>().unwrap();
+        assert_eq!(parsed, SupportedSched::Kestrel);
+        let name: &str = SupportedSched::Kestrel.into();
+        assert_eq!(name, "scx_kestrel");
     }
 }

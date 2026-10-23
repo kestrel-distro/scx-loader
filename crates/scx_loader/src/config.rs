@@ -112,6 +112,7 @@ pub fn get_default_config() -> Config {
         SupportedSched::Forge,
         SupportedSched::MLFQ,
         SupportedSched::EEVDF,
+        SupportedSched::Kestrel,
     ];
     let scheds_map = HashMap::from(supported_scheds.map(init_default_config_entry));
     Config {
@@ -249,6 +250,11 @@ fn get_default_scx_flags_for_mode(
             SchedMode::PowerSave => vec!["-m", "powersave"],
             SchedMode::Server | SchedMode::Auto => vec![],
         },
+        // scx_kestrel has no built-in layer config: every mode passes the
+        // layers file shipped by the scx-kestrel package.
+        SupportedSched::Kestrel => {
+            vec!["f:/usr/share/scx_kestrel/kestrel-layers.json"]
+        }
         // The below Schedulers haven't defined any modes
         SupportedSched::Rusty
         | SupportedSched::Rustland
@@ -480,6 +486,17 @@ server_mode = []
             configured_modes,
             vec![SchedMode::Auto, SchedMode::PowerSave, SchedMode::LowLatency]
         );
+    }
+
+    #[test]
+    fn test_kestrel_always_passes_layers_file() {
+        let config = get_default_config();
+        for mode in ALL_MODES {
+            assert_eq!(
+                get_scx_flags_for_mode(&config, &SupportedSched::Kestrel, mode),
+                vec!["f:/usr/share/scx_kestrel/kestrel-layers.json"]
+            );
+        }
     }
 
     #[test]

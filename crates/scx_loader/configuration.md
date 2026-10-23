@@ -197,6 +197,11 @@ The example configuration above shows how to set custom flags for different sche
     * No custom flags are defined, so the default flags for each mode will be used.
 * For `scx_eevdf`:
     * No custom flags are defined, so the default flags for each mode will be used.
+* For `scx_kestrel`:
+    * Every mode passes `f:/usr/share/scx_kestrel/kestrel-layers.json`, the
+      layer configuration shipped by the `scx-kestrel` package. Unlike the
+      other schedulers, `scx_kestrel` has no built-in layer set to fall back
+      to, so the file is required.
 
 ### Fallback Behavior
 

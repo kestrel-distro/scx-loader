@@ -122,6 +122,7 @@ impl ScxLoader {
             "scx_flash",
             "scx_flow",
             "scx_forge",
+            "scx_kestrel",
             "scx_lavd",
             "scx_mlfq",
             "scx_pandemonium",
