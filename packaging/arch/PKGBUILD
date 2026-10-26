@@ -20,12 +20,12 @@ source=()
 sha256sums=()
 
 build() {
-    cd "${startdir}/.."
+    cd "${startdir}/../.."
     cargo build --release --locked -p scx_loader -p scxctl
 }
 
 package() {
-    cd "${startdir}/.."
+    cd "${startdir}/../.."
 
     install -Dm755 target/release/scx_loader "$pkgdir/usr/bin/scx_loader"
     install -Dm755 target/release/scxctl "$pkgdir/usr/bin/scxctl"
