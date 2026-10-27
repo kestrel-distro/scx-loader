@@ -1,3 +1,25 @@
+# Kestrel fork: `scx-tools-kestrel`
+
+This fork registers `scx_kestrel` in the loader's closed `SupportedSched` list
+so `scx_loader`/`scxctl` can start, switch and restore it. Kestrel packages it
+as `scx-tools-kestrel` (`packaging/arch`), which `provides`/`conflicts`
+`scx-tools`.
+
+The Kestrel loader config passes the baked layer file for every mode:
+
+```toml
+[scheds.scx_kestrel]
+auto_mode = ["f:/usr/share/scx_kestrel/kestrel-layers.json"]
+gaming_mode = ["f:/usr/share/scx_kestrel/kestrel-layers.json"]
+lowlatency_mode = ["f:/usr/share/scx_kestrel/kestrel-layers.json"]
+powersave_mode = ["f:/usr/share/scx_kestrel/kestrel-layers.json"]
+```
+
+`scx_bpfland` remains the default scheduler until the bench justifies changing
+it. Upstream `sched-ext/scx-loader` content follows.
+
+---
+
 # scx_loader & scxctl & scxtui
 
 [![Crates.io](https://img.shields.io/crates/v/scx_loader.svg)](https://crates.io/crates/scx_loader)
